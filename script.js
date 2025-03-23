@@ -11,6 +11,11 @@ function Book(title, author, pages, isRead) {
     this.isRead = isRead; 
 }
 
+// Add toggleRead method to Book prototype
+Book.prototype.toggleRead = function() {
+    this.isRead = !this.isRead; // Toggle the isRead boolean
+};
+
 
 function addBookToLibrary(title, author, pages, isRead) {
   // take params, create a book then store it in the array
@@ -41,6 +46,7 @@ function displayBooks() {
                     <div class="book-status">
                         ${book.isRead ? 'Read' : 'Not Read'}
                     </div>
+                    <button class="toggle-read-btn" data-book-id="${book.id}">Toggle Read</button>
                     <button class="remove-btn" data-book-id="${book.id}">Remove</button>
                 `;
 
@@ -54,6 +60,19 @@ function displayBooks() {
             const bookId = event.target.getAttribute('data-book-id');
             removeBookFromLibrary(bookId);
             displayBooks(); // Refresh the display
+        });
+    });
+
+    // Add event listeners for toggle read buttons
+    const toggleButtons = document.querySelectorAll('.toggle-read-btn');
+    toggleButtons.forEach(button => {
+        button.addEventListener('click', (event) => {
+            const bookId = event.target.getAttribute('data-book-id');
+            const book = myLibrary.find(book => book.id === bookId);
+            if (book) {
+                book.toggleRead();
+                displayBooks();
+            }
         });
     });
 }
